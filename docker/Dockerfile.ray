@@ -1,0 +1,7 @@
+FROM python:3.8-slim
+
+RUN pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple
+
+RUN pip install --upgrade pip
+
+RUN pip install --no-cache-dir -U 'ray[all]==2.2.0'

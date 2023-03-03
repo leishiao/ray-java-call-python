@@ -1,0 +1,77 @@
+version: "3.8"
+
+services:
+  demo-ray:
+    image: demo-ray:latest
+    container_name: demo-ray
+    environment:
+      PYTHONPATH: /root/code
+    volumes:
+      - ./:/root/code
+    tty: true
+    cap_add:
+      - ALL
+    privileged: true
+    ports:
+      - 10001:10001 #--ray-client-server-port
+      - 6379:6379 #--port
+      - 8365:8365 #--dashboard-port
+      - 8361:8361 #--node-manager-port
+      - 8362:8362 #--object-manager-port
+      - 8366:8366 #--metrics-export-port
+      - 8367:8367 #--dashboard-agent-listen-port
+      - 8368:8368 #--dashboard-agent-grpc-port
+      - 5600-5699:5600-5699 #--min-worker-port - --max-worker-port 
+    command:
+      - ray
+      - start
+      - --head
+      - --port=6379
+      - --node-manager-port=8361
+      - --object-manager-port=8362
+      - --include-dashboard=true
+      - --dashboard-port=8365
+      - --dashboard-host=0.0.0.0
+      - --min-worker-port=5600
+      - --max-worker-port=5699
+      - --ray-client-server-port=10001
+      - --metrics-export-port=8366
+      - --dashboard-agent-listen-port=8367
+      - --dashboard-agent-grpc-port=8368
+      - --disable-usage-stats
+      - --block
+    networks:
+      demo-ray:
+        ipv4_address: 192.168.66.2
+
+  demo_dev:
+    image: demo-dev:latest
+    container_name: demo_dev
+    environment:
+      PYTHONPATH: /root/code
+    volumes:
+      - ./:/root/code
+    tty: true
+    cap_add:
+      - ALL
+    privileged: true
+    entrypoint: bash
+    # network_mode: host
+    networks:
+      demo-dev:
+        ipv4_address: 192.168.67.2
+
+networks:
+  demo-ray:
+    ipam:
+      config:
+        - subnet: 192.168.66.0/24
+          gateway: 192.168.66.1
+    name: demo-ray
+
+  demo-dev:
+    ipam:
+      config:
+        - subnet: 192.168.67.0/24
+          gateway: 192.168.67.1
+    name: demo-dev
