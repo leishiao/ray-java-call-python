@@ -14,30 +14,31 @@ services:
     privileged: true
     ports:
       - 10001:10001 #--ray-client-server-port
-      - 6379:6379 #--port
-      - 8365:8365 #--dashboard-port
-      - 8361:8361 #--node-manager-port
-      - 8362:8362 #--object-manager-port
-      - 8366:8366 #--metrics-export-port
-      - 8367:8367 #--dashboard-agent-listen-port
-      - 8368:8368 #--dashboard-agent-grpc-port
-      - 5600-5699:5600-5699 #--min-worker-port - --max-worker-port 
+      - 8179:8179 #--port
+      - 8165:8165 #--dashboard-port
+      - 8160:8160 #--node-manager-port
+      - 8162:8162 #--object-manager-port
+      - 8166:8166 #--metrics-export-port
+      - 8167:8167 #--dashboard-agent-listen-port
+      - 8168:8168 #--dashboard-agent-grpc-port
+      - 5100-5199:5100-5199 #--min-worker-port - --max-worker-port 
     command:
       - ray
       - start
       - --head
-      - --port=6379
-      - --node-manager-port=8361
-      - --object-manager-port=8362
+      - --node-ip-address=192.168.66.1
+      - --port=8179
+      - --node-manager-port=8160
+      - --object-manager-port=8162
       - --include-dashboard=true
-      - --dashboard-port=8365
+      - --dashboard-port=8165
       - --dashboard-host=0.0.0.0
-      - --min-worker-port=5600
-      - --max-worker-port=5699
+      - --min-worker-port=5100
+      - --max-worker-port=5199
       - --ray-client-server-port=10001
-      - --metrics-export-port=8366
-      - --dashboard-agent-listen-port=8367
-      - --dashboard-agent-grpc-port=8368
+      - --metrics-export-port=8166
+      - --dashboard-agent-listen-port=8167
+      - --dashboard-agent-grpc-port=8168
       - --disable-usage-stats
       - --block
     networks:
@@ -55,23 +56,42 @@ services:
     cap_add:
       - ALL
     privileged: true
-    entrypoint: bash
-    # network_mode: host
+    ports:
+      - 8261:8261 #--node-manager-port
+      - 8262:8262 #--object-manager-port
+      - 8266:8266 #--metrics-export-port
+      - 8267:8267 #--dashboard-agent-listen-port
+      - 8268:8268 #--dashboard-agent-grpc-port
+      - 5200-5299:5200-5299 #--min-worker-port - --max-worker-port 
+    command:
+      - ray
+      - start
+      - --node-ip-address=192.168.67.1
+      - --address=192.168.66.1:8179
+      - --node-manager-port=8261
+      - --object-manager-port=8262
+      - --min-worker-port=5200
+      - --max-worker-port=5299
+      - --metrics-export-port=8266
+      - --dashboard-agent-listen-port=8267
+      - --dashboard-agent-grpc-port=8268
+      - --disable-usage-stats
+      - --block
     networks:
       demo-dev:
         ipv4_address: 192.168.67.2
 
 networks:
-  demo-ray:
-    ipam:
-      config:
-        - subnet: 192.168.66.0/24
-          gateway: 192.168.66.1
-    name: demo-ray
-
   demo-dev:
     ipam:
       config:
         - subnet: 192.168.67.0/24
           gateway: 192.168.67.1
     name: demo-dev
+
+  demo-ray:
+    ipam:
+      config:
+        - subnet: 192.168.66.0/24
+          gateway: 192.168.66.1
+    name: demo-ray
