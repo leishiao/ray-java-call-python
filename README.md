@@ -18,7 +18,7 @@
 
 ​	容器B内也需要启动Ray实例，参考docker-compose.yml
 
-​	在容器B中执行Java程序时指定参数，`-Dray.address=192.168.66.1:6379 -Dray.node-ip=192.168.67.1`，参考run_cluster.sh
+​	在容器B中执行Java程序时指定参数，`-Dray.address=192.168.66.1:8179 -Dray.node-ip=192.168.67.1`，参考run_cluster.sh
 
 
 ## 步骤：
