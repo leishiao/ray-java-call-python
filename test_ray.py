@@ -5,7 +5,7 @@ import ray
 from collections import Counter
 
 
-ray.init(address='ray://192.168.0.119:10001')
+ray.init(address='ray://192.168.66.1:10001')
 
 print("ray init success")
 
